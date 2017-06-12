@@ -1,8 +1,13 @@
 FROM php:7.1.4-apache
 
+# install xdebug for development
+COPY xdebug.ini.tmpl /etc/confd/templates/
+COPY xdebug.toml /etc/confd/conf.d/
+
 RUN pecl install xdebug \
-    && docker-php-ext-enable xdebug \
-    && docker-php-ext-install pdo_mysql \
+    && docker-php-ext-enable xdebug
+
+RUN docker-php-ext-install pdo_mysql \
     && a2enmod rewrite \
     && apt-get update -y \
     && apt-get install -y wget \
@@ -14,6 +19,3 @@ RUN pecl install xdebug \
 
 COPY apache2-foreground /usr/local/bin/
 RUN chmod +x /usr/local/bin/apache2-foreground
-COPY xdebug.ini.tmpl /etc/confd/templates/
-COPY xdebug.toml /etc/confd/conf.d/
-
