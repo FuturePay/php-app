@@ -19,3 +19,6 @@ RUN docker-php-ext-install pdo_mysql \
 
 COPY apache2-foreground /usr/local/bin/
 RUN chmod +x /usr/local/bin/apache2-foreground
+COPY xdebug.ini.tmpl /etc/confd/templates/
+COPY xdebug.toml /etc/confd/conf.d/
+
