@@ -1,5 +1,8 @@
 FROM php:7.1.4-apache
 
+# add development php.ini
+COPY development.php.ini /usr/local/etc/php/php.ini
+
 # install xdebug for development
 COPY xdebug.ini.tmpl /etc/confd/templates/
 COPY xdebug.toml /etc/confd/conf.d/
