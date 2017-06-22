@@ -2,5 +2,5 @@
 src = "xdebug.ini.tmpl"
 dest = "/usr/local/etc/php/conf.d/xdebug.ini"
 keys = [
-    "/creditdecisioning/xdebug/ip",
+    "/xdebug/ip",
 ]
