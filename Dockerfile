@@ -1,25 +1,20 @@
 FROM php:7.1.4-apache
 
-# add development php.ini
-COPY development.php.ini /usr/local/etc/php/php.ini
+COPY assets/* /tmp/
 
-# install xdebug for development
-COPY xdebug.ini.tmpl /etc/confd/templates/
-COPY xdebug.toml /etc/confd/conf.d/
+# Install pdo
+RUN docker-php-ext-install pdo_mysql
 
-RUN pecl install xdebug \
-    && docker-php-ext-enable xdebug
+# Enable mod_rewrite
+RUN a2enmod rewrite
 
-RUN docker-php-ext-install pdo_mysql \
-    && a2enmod rewrite \
-    && apt-get update -y \
-    && apt-get install -y wget \
-    && apt-get install -y unzip \
-    && wget -O /usr/local/bin/confd https://github.com/kelseyhightower/confd/releases/download/v0.11.0/confd-0.11.0-linux-amd64 \
-    && chmod +x /usr/local/bin/confd \
-    && mkdir -p /etc/confd/templates \
-    && mkdir -p /etc/confd/conf.d \
-    && rm -r /var/lib/apt/lists/*
+# Install confd
+RUN curl -Lo /usr/local/bin/confd https://github.com/kelseyhightower/confd/releases/download/v0.11.0/confd-0.11.0-linux-amd64 && \
+    chmod +x /usr/local/bin/confd && \
+    mkdir -p /etc/confd/templates && \
+    mkdir -p /etc/confd/conf.d
 
-COPY apache2-foreground /usr/local/bin/
-RUN chmod +x /usr/local/bin/apache2-foreground
+# Cleanup
+RUN rm -r /tmp/*
+
+CMD confd -onetime -backend env && apache2-foreground
