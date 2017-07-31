@@ -5,6 +5,11 @@ COPY assets/* /tmp/
 # Install pdo
 RUN docker-php-ext-install pdo_mysql
 
+# Install xdebug
+RUN pecl install xdebug && \
+    docker-php-ext-enable xdebug && \
+ 	mv /tmp/xdebug.ini /usr/local/etc/php/conf.d/
+
 # Enable mod_rewrite
 RUN a2enmod rewrite
 
