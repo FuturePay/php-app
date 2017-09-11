@@ -14,7 +14,11 @@ RUN curl -Lo /usr/local/bin/confd https://github.com/kelseyhightower/confd/relea
     mkdir -p /etc/confd/templates && \
     mkdir -p /etc/confd/conf.d
 
+# Install entrypoint
+RUN mv /tmp/entrypoint /usr/local/bin/
+
 # Cleanup
 RUN rm -r /tmp/*
 
-CMD confd -onetime -backend env && apache2-foreground
+ENTRYPOINT ["entrypoint"]
+CMD ["apache2-foreground"]
